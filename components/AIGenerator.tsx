@@ -30,7 +30,7 @@ import AccommodationCard from './AccommodationCard';
 import ClientsManager from './ClientsManager';
 
 const AIGenerator: React.FC = () => {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const { credits, deductCredit } = useCredits();
 
   const [activeTab, setActiveTab] = useState<'builder' | 'clients' | 'settings'>('builder');
@@ -629,6 +629,36 @@ const AIGenerator: React.FC = () => {
         );
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background-dark flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background-dark relative overflow-hidden text-center px-4">
+        <div className="absolute inset-0 bg-primary/5 blur-[120px] pointer-events-none"></div>
+        <div className="relative z-10 max-w-md animate-in zoom-in duration-500">
+          <span className="material-icons text-6xl text-primary mb-6">lock_person</span>
+          <h2 className="text-3xl font-bold text-white mb-4">Authentication Required</h2>
+          <p className="text-slate-400 mb-8 leading-relaxed">
+            Please sign in or create a free account to access the Bespoke AI Itinerary Builder.
+          </p>
+          <button
+            onClick={() => setIsAuthModalOpen(true)}
+            className="w-full bg-primary text-white py-4 rounded-xl font-bold hover:scale-[1.02] transition-transform shadow-xl shadow-primary/20"
+          >
+            Sign In / Create Account
+          </button>
+        </div>
+        <AuthModal isOpen={isAuthModalOpen} onClose={() => { setIsAuthModalOpen(false); window.location.href = '#/'; }} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-background-light dark:bg-background-dark">
