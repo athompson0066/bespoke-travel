@@ -1,7 +1,11 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const API_KEY = "AIzaSyCl6RVUpbUviGFcTNC551YJ9M57t-A5m5o";
+const API_KEY = process.env.VITE_GEMINI_API_KEY;
+if (!API_KEY) {
+    console.error("Error: VITE_GEMINI_API_KEY is not defined in the environment.");
+    process.exit(1);
+}
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 const modelsToTest = [
