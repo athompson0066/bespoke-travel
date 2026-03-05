@@ -31,8 +31,7 @@ const AdminDashboard: React.FC = () => {
             setLoading(true);
             const { data, error } = await supabase
                 .from('profiles')
-                .select('*')
-                .order('created_at', { ascending: false });
+                .select('*');
 
             if (error) throw error;
             setProfiles(data || []);
